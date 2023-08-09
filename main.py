@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QGridLayout, \
+from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QGridLayout, \
      QLineEdit, QPushButton, QMainWindow, QTableWidget, QTableWidgetItem, QDialog,\
      QComboBox, QToolBar, QStatusBar, QMessageBox
 from PyQt6.QtGui import QAction, QIcon
@@ -35,13 +35,20 @@ class MainWindow(QMainWindow):
         help_menu_item = self.menuBar().addMenu("&Help")
         edit_menu_item = self.menuBar().addMenu("&Edit")
 
+        # Create Add Student option for the File menu list
         add_student_action = QAction(QIcon("icons/add.png"), "Add Student", self)
         add_student_action.triggered.connect(self.insert)
         file_menu_item.addAction(add_student_action)
 
+        # Create an Exit option for the File menu list
+        exit_action = QAction("Exit", self)
+        exit_action.triggered.connect(self.exit_program)
+        file_menu_item.addAction(exit_action)
+
+        # Create an About action item for the Help menu list
         about_action = QAction("About", self)
-        help_menu_item.addAction(about_action)
         about_action.triggered.connect(self.about)
+        help_menu_item.addAction(about_action)
 
 
         search_action = QAction(QIcon('icons/search.png'), "Search", self)
@@ -118,6 +125,8 @@ class MainWindow(QMainWindow):
         dialog = AboutDialog()
         dialog.exec()
 
+    def exit_program(self):
+        exit()
 
 class AboutDialog(QMessageBox):
     def __init__(self):
