@@ -4,12 +4,14 @@ from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QGridLay
      QComboBox, QToolBar, QStatusBar, QMessageBox
 from PyQt6.QtGui import QAction, QIcon
 import sys
-import sqlite3
+import os
 import mysql.connector
 
 
 class DatabaseConnection:
-    def __init__(self, host="localhost", user="root", password="pythoncourse", database="school"):
+
+    def __init__(self, host="localhost", user="root",
+                 password=os.getenv("MySQL password"), database="school"):
         self.host = host
         self.user = user
         self.password = password
@@ -209,7 +211,7 @@ class DeleteDialog(QDialog):
         index = main_window.table.currentRow()
         student_id = main_window.table.item(index, 0).text()
 
-        connection = sqlite3.connect("database.db")
+        connection = DatabaseConnection().connect()
         cursor = connection.cursor()
         cursor.execute("DELETE FROM students WHERE id = %s", (student_id, ))
         connection.commit()
@@ -260,7 +262,7 @@ class InsertDialog(QDialog):
         name = self.student_name.text()
         course = self.course_name.itemText(self.course_name.currentIndex())
         mobile = self.mobile.text()
-        connection = sqlite3.connect("database.db")
+        connection = DatabaseConnection().connect()
         cursor = connection.cursor()
         cursor.execute("INSERT INTO students (name, course, mobile) VALUES (%s, %s, %s)",
                        (name, course, mobile))
@@ -294,7 +296,7 @@ class SearchDialog(QDialog):
 
     def search(self):
         name = self.search_term.text()
-        connection = sqlite3.connect("database.db")
+        connection = DatabaseConnection().connect()
         cursor = connection.cursor()
         items = main_window.table.findItems(name, Qt.MatchFlag.MatchFixedString)
         for item in items:
